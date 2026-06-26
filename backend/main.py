@@ -23,6 +23,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
+import sys, os
+sys.path.insert(0, os.path.dirname(__file__))
 from contradiction_engine import extract_decisions, analyze_segment
 
 app = FastAPI(title="AI Meeting Watchdog")
