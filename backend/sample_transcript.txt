@@ -1,0 +1,13 @@
+Priya: Okay, let's kick off the Atlas sync. First up — hosting vendor for the new dashboard.
+Priya: I think we should go with Vendor A, they quoted us the best rate for our traffic.
+Daniel: Agreed, Vendor A it is. Let's lock that in.
+Daniel: Next, the Q4 roadmap. We're on track for the December feature freeze.
+Sara: Quick one — for the new analytics dashboard, I think we should skip the accessibility pass. It's only used by the internal ops team, not customers.
+Daniel: Makes sense, let's move on. How's the budget looking?
+Priya: We're actually going to need more runway. Let's bump the Q3 budget to $75,000, I think Finance will understand given the scope increase.
+Sara: Sounds good. Also, for the user funnel data, I've already started wiring up Mixpanel — it gives us much richer drop-off tracking than what we have now.
+Daniel: Nice, that'll help a lot with the onboarding redesign.
+Priya: One more thing — given the timeline crunch, let's actually go with Vendor B for hosting instead. Their support SLA is better for what we need.
+Daniel: Works for me. Okay, last item — marketing wants to push the new landing page copy live this afternoon.
+Sara: I already gave it a once-over, looks fine to me, let's just ship it.
+Daniel: Great, let's wrap here. Thanks everyone.
