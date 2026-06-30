@@ -1,0 +1,502 @@
+/* ============================================================
+   Session.css — "Godly Authority" editorial theme
+   Meeting Watchdog — operational / control-room session view
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+:root {
+  /* Core surfaces */
+  --surface:                  #131314;
+  --surface-dim:               #131314;
+  --surface-bright:            #393939;
+  --surface-container-lowest:  #0e0e0e;
+  --surface-container-low:     #1b1c1c;
+  --surface-container:         #1f2020;
+  --surface-container-high:    #2a2a2a;
+  --surface-container-highest: #353535;
+  --background:                 #0d0d0d;
+
+  /* Text */
+  --on-surface:         #e4e2e2;
+  --on-surface-variant: #c3c7c9;
+  --on-background:      #e4e2e2;
+
+  /* Borders / outlines */
+  --outline:         #8d9193;
+  --outline-variant: #434849;
+
+  /* Primary (white-based) */
+  --primary:    #ffffff;
+  --on-primary: #263236;
+
+  /* Secondary (neutral gray) */
+  --secondary:    #c6c6c7;
+  --on-secondary: #2f3131;
+
+  /* Tertiary / gold */
+  --tertiary-fixed:     #ffe089;
+  --tertiary-fixed-dim: #e9c34a;
+
+  /* Error / danger */
+  --error:               #ffb4ab;
+  --on-error:             #690005;
+  --error-container:      #93000a;
+  --on-error-container:   #ffdad6;
+
+  /* Brand accent — authority blue */
+  --authority-blue: #e1eff3;
+
+  /* Wild sand */
+  --wild-sand: #f4f4f4;
+}
+
+/* ============================================================
+   ROOT
+   ============================================================ */
+
+.session-page {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.session-page * {
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.session-page__header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.75rem 4.4rem;
+  background: rgba(13, 13, 13, 0.7);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-bottom: 1px solid rgba(67, 72, 73, 0.3);
+}
+
+.session-page__title {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+  animation: title-glow 2.6s ease-in-out infinite;
+  transition: letter-spacing 0.3s ease, opacity 0.3s ease;
+}
+
+.session-page__title:hover {
+  opacity: 0.85;
+  letter-spacing: 0.14em;
+}
+
+.session-page__title:focus-visible {
+  outline: 2px solid var(--authority-blue);
+  outline-offset: 4px;
+}
+
+@keyframes title-glow {
+  0%, 100% {
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.15);
+  }
+  50% {
+    text-shadow: 0 0 14px rgba(255, 255, 255, 0.65), 0 0 28px rgba(225, 239, 243, 0.25);
+  }
+}
+
+/* ── status dot ── */
+.session-page__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.session-page__dot--idle {
+  background: var(--outline);
+}
+
+.session-page__dot--listening {
+  background: var(--authority-blue);
+  animation: dot-pulse-listening 1.8s ease-in-out infinite;
+}
+
+.session-page__dot--alert {
+  background: var(--error);
+  animation: dot-pulse-alert 0.7s ease-in-out infinite;
+}
+
+@keyframes dot-pulse-listening {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+@keyframes dot-pulse-alert {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+
+/* ============================================================
+   ERROR BANNER
+   ============================================================ */
+
+.session-page__error-banner {
+  background: rgba(147, 0, 10, 0.15);
+  border-left: 4px solid var(--error);
+  color: var(--on-error-container);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.75rem 4.4rem;
+}
+
+/* ============================================================
+   UPLOAD STRIP
+   ============================================================ */
+
+.session-page__upload-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.25rem 4.4rem;
+  background: var(--surface-container-low);
+  border-bottom: 1px solid rgba(67, 72, 73, 0.3);
+}
+
+.session-page__file-input {
+  font-size: 0.8125rem;
+  color: var(--on-surface);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 0;
+  padding: 0.5rem 0.75rem;
+  transition: border-color 0.3s ease;
+}
+
+.session-page__file-input:focus {
+  outline: none;
+  border-color: var(--authority-blue);
+}
+
+.session-page__file-input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.session-page__file-input::file-selector-button,
+.session-page__file-input::-webkit-file-upload-button {
+  background: transparent;
+  border: 1px solid var(--primary);
+  border-radius: 0;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.4rem 0.75rem;
+  margin-right: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.session-page__file-input::file-selector-button:hover,
+.session-page__file-input::-webkit-file-upload-button:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.session-page__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: transparent;
+  border: 1px solid var(--outline);
+  border-radius: 0;
+  color: var(--primary);
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.6rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.session-page__btn:hover:not(:disabled) {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #000;
+}
+
+.session-page__btn:focus-visible {
+  outline: 2px solid var(--authority-blue);
+  outline-offset: 2px;
+}
+
+.session-page__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.session-page__btn-icon {
+  display: inline-block;
+  font-size: 0.875em;
+  line-height: 1;
+}
+
+/* primary / affirmative */
+.session-page__btn--primary {
+  border-color: var(--authority-blue);
+  color: var(--authority-blue);
+}
+
+.session-page__btn--primary:hover:not(:disabled) {
+  background: var(--authority-blue);
+  border-color: var(--authority-blue);
+  color: #000;
+}
+
+/* danger / stop */
+.session-page__btn--danger {
+  border-color: var(--error);
+  color: var(--error);
+}
+
+.session-page__btn--danger:hover:not(:disabled) {
+  background: var(--error);
+  border-color: var(--error);
+  color: var(--on-error);
+}
+
+/* ============================================================
+   GRID
+   ============================================================ */
+
+.session-page__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr);
+  gap: 1.6rem;
+  padding: 2.5rem 4.4rem 4rem;
+  flex: 1;
+  align-items: start;
+}
+
+.session-page__left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  min-height: 0;
+}
+
+.session-page__panel-chrome {
+  border: 1px solid rgba(67, 72, 73, 0.3);
+  background: var(--surface-container-low);
+}
+
+.session-page__mic-row {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+/* ============================================================
+   PASTE FALLBACK
+   ============================================================ */
+
+.session-page__paste-fallback {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--surface-container-low);
+  border: 1px solid rgba(67, 72, 73, 0.3);
+}
+
+.session-page__paste-notice {
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--on-surface-variant);
+  margin: 0;
+}
+
+.session-page__paste-area {
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: 0;
+  color: var(--on-surface);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  padding: 0.75rem;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+.session-page__paste-area::placeholder {
+  color: var(--outline);
+}
+
+.session-page__paste-area:focus {
+  outline: none;
+  border-color: var(--authority-blue);
+}
+
+/* ============================================================
+   RIGHT COLUMN
+   ============================================================ */
+
+.session-page__right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* ── policy panel ── */
+.session-page__policy {
+  background: var(--surface-container);
+  border: 1px solid rgba(67, 72, 73, 0.3);
+  padding: 1.5rem;
+  max-height: 420px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--outline-variant) transparent;
+}
+
+.session-page__policy::-webkit-scrollbar {
+  width: 4px;
+}
+
+.session-page__policy::-webkit-scrollbar-thumb {
+  background: var(--outline-variant);
+}
+
+.session-page__policy-label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--on-surface-variant);
+  margin: 0 0 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(67, 72, 73, 0.3);
+}
+
+.session-page__policy-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.session-page__policy-item {
+  border-left: 2px solid var(--outline-variant);
+  padding: 0.5rem 0.75rem;
+  background: transparent;
+  color: var(--on-surface-variant);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.session-page__policy-item:hover {
+  border-left-color: var(--authority-blue);
+  background: var(--surface-container-high);
+}
+
+/* ── alert slot ── */
+.session-page__alert-slot {
+  display: contents;
+}
+
+/* ============================================================
+   ANALYSING INDICATOR
+   ============================================================ */
+
+.session-page__analysing {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 40;
+  background: var(--surface-container-high);
+  border: 1px solid var(--outline-variant);
+  color: var(--authority-blue);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 1rem;
+  animation: analysing-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes analysing-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .session-page__header,
+  .session-page__error-banner,
+  .session-page__upload-strip {
+    padding-left: 2.1rem;
+    padding-right: 2.1rem;
+  }
+
+  .session-page__grid {
+    grid-template-columns: 1fr;
+    padding: 2rem 2.1rem 3rem;
+    gap: 1.25rem;
+  }
+
+  .session-page__policy {
+    max-height: 280px;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .session-page__dot--listening,
+  .session-page__dot--alert,
+  .session-page__analysing,
+  .session-page__title {
+    animation: none;
+  }
+
+  .session-page__dot--listening { opacity: 1; }
+  .session-page__dot--alert     { opacity: 1; }
+  .session-page__analysing      { opacity: 1; }
+  .session-page__title          { text-shadow: 0 0 4px rgba(255, 255, 255, 0.15); }
+}

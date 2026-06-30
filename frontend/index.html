@@ -1,0 +1,264 @@
+<!doctype html>
+<html class="dark" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Meeting Watchdog — real-time contradiction detection for enterprise meetings" />
+    <title>AI Meeting Watchdog</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#e2e2e2",
+              "tertiary": "#ffffff",
+              "outline-variant": "#434849",
+              "error": "#ffb4ab",
+              "on-secondary-container": "#b4b5b5",
+              "surface-variant": "#353535",
+              "on-primary-fixed": "#111d21",
+              "on-tertiary-container": "#7b6100",
+              "surface": "#131314",
+              "inverse-primary": "#536164",
+              "on-tertiary-fixed-variant": "#574400",
+              "on-secondary-fixed": "#1a1c1c",
+              "inverse-surface": "#e4e2e2",
+              "on-background": "#e4e2e2",
+              "on-surface": "#e4e2e2",
+              "secondary-container": "#454747",
+              "surface-container": "#1f2020",
+              "on-secondary": "#2f3131",
+              "on-error-container": "#ffdad6",
+              "on-primary": "#263236",
+              "on-primary-fixed-variant": "#3c494c",
+              "on-error": "#690005",
+              "tertiary-fixed": "#ffe089",
+              "surface-dim": "#131314",
+              "on-tertiary": "#3d2f00",
+              "secondary-fixed-dim": "#c6c6c7",
+              "primary": "#ffffff",
+              "error-container": "#93000a",
+              "on-primary-container": "#59676a",
+              "on-surface-variant": "#c3c7c9",
+              "surface-container-high": "#2a2a2a",
+              "surface-bright": "#393939",
+              "secondary": "#c6c6c7",
+              "surface-container-lowest": "#0e0e0e",
+              "primary-fixed-dim": "#bbc9cd",
+              "background": "#0d0d0d",
+              "inverse-on-surface": "#303030",
+              "on-secondary-fixed-variant": "#454747",
+              "primary-fixed": "#d7e5e9",
+              "tertiary-container": "#ffe089",
+              "surface-tint": "#bbc9cd",
+              "outline": "#8d9193",
+              "on-tertiary-fixed": "#241a00",
+              "surface-container-low": "#1b1c1c",
+              "primary-container": "#d7e5e9",
+              "tertiary-fixed-dim": "#e9c34a",
+              "surface-container-highest": "#353535",
+              "wild-sand": "#f4f4f4",
+              "authority-blue": "#e1eff3"
+            },
+            spacing: {
+              "margin-section": "8rem",
+              "padding-mobile": "2.1rem",
+              "gutter-desktop": "1.6rem",
+              "padding-desktop": "4.4rem"
+            },
+            fontFamily: {
+              "body-md": ["Inter", "sans-serif"],
+              "label-caps": ["Inter", "sans-serif"],
+              "headline-h1": ["Inter", "sans-serif"],
+              "display-hero": ["Inter", "sans-serif"],
+              "headline-h2": ["Inter", "sans-serif"]
+            },
+            fontSize: {
+              "body-md": ["1rem", { lineHeight: "1.6rem", fontWeight: "400" }],
+              "label-caps": ["0.75rem", { lineHeight: "1rem", letterSpacing: "0.1em", fontWeight: "600" }],
+              "headline-h1": ["4.8rem", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+              "display-hero": ["16.8vw", { lineHeight: "1.0", letterSpacing: "-0.04em", fontWeight: "700" }],
+              "headline-h2": ["4rem", { lineHeight: "1.2", fontWeight: "500" }]
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      /* ── Design tokens used by Session.jsx / AlertCard / TranscriptPanel / WaveformBars ── */
+      :root {
+        --font-display: 'Inter', sans-serif;
+        --font-ui:      'Inter', sans-serif;
+        --font-mono:    'Inter', sans-serif;
+
+        --text-primary:   #f4f4f4;
+        --text-secondary: #c3c7c9;
+        --text-muted:     #8d9193;
+        --text-ghost:     #5a5d5e;
+
+        --forest-400: #e1eff3;
+        --forest-glow: rgba(225,239,243,0.35);
+        --clay-400:   #ffb4ab;
+        --clay-glow:  rgba(255,180,171,0.35);
+
+        --r-sm: 0px;
+        --r-md: 0px;
+        --r-lg: 0px;
+        --r-full: 9999px;
+
+        --t-fast:  150ms ease;
+        --t-base:  250ms ease;
+        --t-fluid: 400ms cubic-bezier(0.16,1,0.3,1);
+      }
+
+      body {
+        background-color: #0d0d0d;
+        color: #f4f4f4;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .perspective-container { perspective: 2000px; }
+
+      @keyframes heading-vp {
+        0%   { transform: rotateX(45deg) translateY(50px); opacity: 0; }
+        100% { transform: rotateX(0deg) translateY(0); opacity: 1; }
+      }
+      @keyframes slide-in {
+        0%   { transform: translateX(-100px); opacity: 0; }
+        100% { transform: translateX(0); opacity: 1; }
+      }
+      .animate-heading { animation: heading-vp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+      .animate-slide   { animation: slide-in 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+      .custom-cursor {
+        width: 20px; height: 20px;
+        border: 1px solid #e1eff3;
+        border-radius: 50%;
+        position: fixed; pointer-events: none; z-index: 9999;
+        transition: transform 0.1s ease;
+        mix-blend-mode: exclusion;
+      }
+
+      .godly-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1.6rem;
+        width: 100%;
+        padding: 0 4.4rem;
+      }
+
+      .editorial-line { height: 1px; background: rgba(67, 72, 73, 0.3); width: 100%; }
+
+      .glass-nav {
+        backdrop-filter: blur(40px);
+        background: rgba(13, 13, 13, 0.7);
+      }
+
+      /* ── Hover-underline heading animation ── */
+      .hover-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .hover-underline::after,
+      .hover-underline::before {
+        content: '';
+        position: absolute;
+        width: 100%; height: 2px;
+        background: linear-gradient(to right, #e1eff3, #8d9193);
+        bottom: -6px; left: 0;
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s ease-out;
+      }
+      .hover-underline::before { top: -6px; transform-origin: left; }
+      .hover-underline:hover::after,
+      .hover-underline:hover::before { transform: scaleX(1); }
+
+      /* ── Nav link fill-on-hover ── */
+      .nav-link {
+        position: relative;
+        display: block;
+        text-transform: uppercase;
+        padding: 8px 16px;
+        z-index: 1;
+        transition: color 0.4s ease;
+      }
+      .nav-link::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        border-top: 1px solid #e1eff3;
+        border-bottom: 1px solid #e1eff3;
+        transform: scaleY(1.6);
+        opacity: 0;
+        transition: 0.3s ease;
+      }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-color: #e1eff3;
+        transform: scale(0);
+        opacity: 0;
+        transition: 0.3s ease;
+        z-index: -1;
+      }
+      .nav-link:hover { color: #131314; }
+      .nav-link:hover::before { transform: scaleY(1); opacity: 1; }
+      .nav-link:hover::after  { transform: scale(1); opacity: 1; }
+
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: rgba(225,239,243,0.18); border-radius: 0; }
+      * { scrollbar-width: thin; scrollbar-color: rgba(225,239,243,0.18) transparent; }
+
+      ::selection { background: #e1eff3; color: #0d0d0d; }
+    </style>
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230d0d0d'/><circle cx='16' cy='16' r='10' fill='none' stroke='%23e1eff3' stroke-width='1.5'/><circle cx='16' cy='16' r='3' fill='%23e1eff3'/></svg>"
+    />
+  </head>
+  <body class="font-body-md">
+
+    <div class="custom-cursor hidden md:block" id="cursor" aria-hidden="true"></div>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+
+    <script>
+      const cursor = document.getElementById('cursor');
+      if (cursor) {
+        document.addEventListener('mousemove', (e) => {
+          cursor.style.left = e.clientX - 10 + 'px';
+          cursor.style.top = e.clientY - 10 + 'px';
+        });
+        document.addEventListener('mouseover', (e) => {
+          if (e.target.closest('a, button, [role="button"]')) {
+            cursor.style.transform = 'scale(2)';
+          }
+        });
+        document.addEventListener('mouseout', (e) => {
+          if (e.target.closest('a, button, [role="button"]')) {
+            cursor.style.transform = 'scale(1)';
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

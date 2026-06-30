@@ -1,0 +1,151 @@
+/* ============================================================
+   AlertCard.css — AI Meeting Watchdog Revamp
+   Deep forest glass. All alert-card__* class names preserved.
+   ============================================================ */
+
+.alert-card {
+  position: relative; overflow: hidden;
+  background: rgba(12, 6, 5, 0.65);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  border: 1px solid rgba(224,112,96,0.24);
+  border-top-color: rgba(255,175,155,0.38);
+  border-left: 3px solid var(--clay-500);
+  border-radius: var(--r-lg);
+  padding: 18px 20px;
+  animation: alert-enter 280ms cubic-bezier(0.23,1,0.32,1) forwards;
+  box-shadow:
+    inset 0 1px 0 rgba(255,175,155,0.20),
+    0 4px 24px rgba(224,112,96,0.22),
+    0 8px 32px rgba(0,0,0,0.38);
+}
+
+@keyframes alert-enter {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.alert-card--exiting { animation: alert-exit 260ms ease forwards; }
+@keyframes alert-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to   { opacity: 0; transform: translateY(-8px) scale(0.97); }
+}
+
+/* ── SHOCKWAVE ── */
+.alert-card__shockwave {
+  position: absolute; top: 50%; left: 50%;
+  width: 0; height: 0; border-radius: 50%;
+  border: 1.5px solid var(--clay-500);
+  transform: translate(-50%, -50%);
+  opacity: 0; pointer-events: none;
+}
+.alert-card__shockwave--fire {
+  animation: shockwave-expand 680ms cubic-bezier(0.23,1,0.32,1) forwards;
+}
+@keyframes shockwave-expand {
+  0%   { width: 0; height: 0; opacity: 0.75; }
+  100% { width: 600px; height: 600px; opacity: 0; }
+}
+
+/* ── BODY FLASH ── */
+body[data-alert="active"] {
+  outline: 2px solid var(--clay-500);
+  outline-offset: -2px;
+  animation: border-bleed 680ms ease forwards;
+}
+@keyframes border-bleed {
+  0%   { outline-color: var(--clay-500); }
+  60%  { outline-color: rgba(224,112,96,0.42); }
+  100% { outline-color: transparent; }
+}
+
+/* ── CARD HEADER ── */
+.alert-card__header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+}
+
+.alert-card__badge {
+  font-size: 10px; font-family: var(--font-mono);
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: rgba(255,200,188,0.94);
+  background: rgba(224,112,96,0.14);
+  border: 1px solid rgba(224,112,96,0.28);
+  border-radius: var(--r-full);
+  padding: 3px 10px; white-space: nowrap;
+  box-shadow: inset 0 1px 0 rgba(255,175,155,0.18);
+}
+.alert-card__timestamp {
+  font-size: 11px; font-family: var(--font-mono);
+  color: var(--text-ghost); margin-left: auto;
+}
+
+/* ── SECTIONS ── */
+.alert-card__section { margin-bottom: 12px; }
+.alert-card__section-label {
+  font-size: 10px; font-family: var(--font-mono);
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--text-muted); margin: 0 0 6px;
+}
+
+.alert-card__flagged {
+  margin: 0; font-size: 13px; font-family: var(--font-mono);
+  color: rgba(255,205,195,0.90);
+  background: rgba(224,112,96,0.09);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 9px 14px; line-height: 1.66;
+  border-left-width: 0;
+  animation: flagged-bar-slam 90ms ease 200ms forwards;
+}
+@keyframes flagged-bar-slam {
+  from { border-left-width: 0; }
+  to   { border-left-width: 2px; border-left-color: var(--clay-500); border-left-style: solid; }
+}
+
+.alert-card__rule {
+  margin: 0; font-size: 12px; font-family: var(--font-mono);
+  color: var(--text-secondary); line-height: 1.66;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: var(--r-md); padding: 9px 14px;
+}
+
+.alert-card__explanation {
+  margin: 0 0 14px; font-size: 12px;
+  color: var(--text-secondary); line-height: 1.78;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 12px;
+}
+
+/* ── DISMISS BUTTON ── */
+.alert-card__dismiss {
+  font-size: 11px; font-family: var(--font-ui);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted);
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-top-color: rgba(255,255,255,0.30);
+  border-radius: var(--r-full);
+  padding: 6px 16px; cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18), 0 2px 6px rgba(0,0,0,0.22);
+  transition: all var(--t-fast);
+}
+.alert-card__dismiss:hover {
+  color: var(--text-primary);
+  border-top-color: rgba(255,255,255,0.52);
+  background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.07) 100%);
+}
+.alert-card__dismiss:active {
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.35);
+  transform: translateY(1px);
+  transition: all 80ms ease;
+}
+.alert-card__dismiss:focus-visible { outline: 2px solid var(--clay-500); outline-offset: 2px; }
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .alert-card, .alert-card--exiting,
+  .alert-card__shockwave--fire, .alert-card__flagged,
+  body[data-alert="active"] { animation: none !important; }
+  .alert-card { opacity: 1; transform: none; }
+  .alert-card__flagged { border-left: 2px solid var(--clay-500); }
+}

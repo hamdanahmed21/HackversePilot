@@ -1,0 +1,63 @@
+/* ============================================================
+   WaveformBars.css — AI Meeting Watchdog Revamp
+   All waveform-bars__* class names preserved.
+   ============================================================ */
+
+.waveform-bars {
+  position: relative; display: flex; align-items: center;
+  justify-content: center; gap: 3px; height: 64px;
+  width: 100%; max-width: 280px;
+}
+
+.waveform-bars__bar {
+  display: block; width: 3px; min-height: 3px; border-radius: 3px;
+  transition: background-color 350ms cubic-bezier(0.23,1,0.32,1), opacity 250ms ease;
+  will-change: height; transform-origin: center;
+}
+
+/* States */
+.waveform-bars--idle .waveform-bars__bar {
+  background-color: rgba(255,255,255,0.18); opacity: 0.38;
+}
+.waveform-bars--recording .waveform-bars__bar {
+  background-color: #3dcb8a; opacity: 1;
+}
+.waveform-bars--alert .waveform-bars__bar {
+  background-color: var(--clay-500); opacity: 1;
+}
+
+/* Pulse orb */
+.waveform-bars__orb {
+  display: block; position: absolute; right: -18px; top: 50%;
+  transform: translateY(-50%);
+  width: 8px; height: 8px; border-radius: 50%;
+  background-color: rgba(255,255,255,0.70);
+  opacity: 0;
+  transition: opacity 250ms ease, background-color 350ms ease;
+  pointer-events: none;
+}
+.waveform-bars--recording .waveform-bars__orb,
+.waveform-bars--alert     .waveform-bars__orb {
+  opacity: 1;
+  animation: wf-orb-pulse 1.4s ease-in-out infinite;
+}
+.waveform-bars--recording .waveform-bars__orb {
+  background-color: #3dcb8a;
+  box-shadow: 0 0 10px rgba(61,203,138,0.55);
+}
+.waveform-bars--alert .waveform-bars__orb {
+  background-color: var(--clay-500);
+  box-shadow: 0 0 10px var(--clay-glow);
+  animation-duration: 0.75s;
+}
+
+@keyframes wf-orb-pulse {
+  0%, 100% { transform: translateY(-50%) scale(1); }
+  50%       { transform: translateY(-50%) scale(1.35); }
+}
+
+/* ── REDUCED MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  .waveform-bars__orb { animation: none !important; }
+  .waveform-bars__bar { transition: none; }
+}
